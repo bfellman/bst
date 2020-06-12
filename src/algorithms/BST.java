@@ -4,14 +4,19 @@ import main.BSTInterface;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.HashSet;
+import java.util.Set;
+import java.util.Collections;
 
 public class BST implements BSTInterface {
 
-    private final HashSet<Long> setA;
+    private final Set<Long> setA;
 
     public BST() {
-        setA = new HashSet<Long>();
+        Set<Long> ss = new HashSet<Long>();
+        setA = Collections.synchronizedSet(ss);
+//	ConcurrentHashMap<Long,Long> M = new ConcurrentHashMap<>();
+//	setA = M.newKeySet();
+
     }
 
     public final boolean contains(final int key) {

@@ -7,5 +7,5 @@ export PATH=${JAVA_HOME}/bin:${PATH}
 
 java="java"
 
-echo ${java} -server -d64 -XX:+UseParallelGC -Xms4G -Xmx4G -jar build/experiments.jar $*
-exec ${java} -server -d64 -XX:+UseParallelGC -Xms4G -Xmx4G -jar build/experiments.jar $*
+#echo ${java} -server -d64 -XX:+UseParallelGC -Xms4G -Xmx4G -jar build/experiments.jar $*
+exec ${java} -server -ea -d64 -XX:+UseParallelGC -Xms4G -Xmx4G -jar build/experiments.jar $*

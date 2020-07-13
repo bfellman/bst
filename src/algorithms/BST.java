@@ -25,7 +25,7 @@ class Node{
         }
     }
     int size(){
-        //if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " Size() for tree with key " + key);
+        //if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " Size() for tree with key " + key);
 
         int left_size = 0;
         int right_size = 0;
@@ -49,7 +49,7 @@ class Node{
         return right_sum + left_sum + key;
     }
     public Node(int key, Node parent) {
-        //if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " Node::Node(" + key + ")");
+        //if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " Node::Node(" + key + ")");
         this.key = key;
         left = null;
         right = null;
@@ -128,7 +128,7 @@ public class BST implements BSTInterface {
         boolean ref = setA.add((long)key);
         long ref_size = setA.size();
 
-        if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " ----------\nBST::insert(" + key + ")" );
+        if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " ----------\nBST::insert(" + key + ")" );
 
         if (head() == null){
             dummy.left = new Node(key, dummy);
@@ -139,25 +139,25 @@ public class BST implements BSTInterface {
         Node parent = head().find(key);
 
         if (parent.key == key){
-            if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::insert() - already contains " + key + " return false" );
+            if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::insert() - already contains " + key + " return false" );
             assert !ref;
             assert this.size() == ref_size;
             return false;
         }
         //synchronized(parent){
-            if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::insert() - Inserting key " + key );
+            if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::insert() - Inserting key " + key );
 
             if (key < parent.key){
                 assert parent.left == null;
                 parent.left = new Node(key, parent);
-                if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::insert() - as left child, size=" + this.size() );
+                if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::insert() - as left child, size=" + this.size() );
                 assert ref;
                 assert this.size() == ref_size;
                 return true;
             }
             assert parent.right == null;
             parent.right = new Node(key, parent);
-            if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::insert() - as right child, size=" + this.size() );
+            if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::insert() - as right child, size=" + this.size() );
             assert ref;
             assert this.size() == ref_size;
             return true;
@@ -167,17 +167,17 @@ public class BST implements BSTInterface {
         assert this.size() == setA.size();
 
         boolean ref = setA.remove((long)key);
-        if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " --------\nBST::remove(" + key + ")" );
+        if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " --------\nBST::remove(" + key + ")" );
 
         if (head() == null){
-            if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove - Tree is empty");
+            if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove - Tree is empty");
             return false;
         }
         Node victim = head().find(key);
         //synchronized (victim.parent){
             //synchronized (victim){
                 if(key != victim.key){
-                    if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove - " + key + " not in tree" );
+                    if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove - " + key + " not in tree" );
 
                     assert !ref;
                     assert this.size() == setA.size();
@@ -185,21 +185,21 @@ public class BST implements BSTInterface {
                 }
 
                 if(victim.left == null && victim.right == null) {
-                    if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove - victim key (" + victim.key + ") has no children" );
+                    if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove - victim key (" + victim.key + ") has no children" );
                     victim.parent.swap(victim, null,"BST::remove(" + key + ")" );
                 }
                 else if(victim.left == null){
-                    if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove - victim key (" + victim.key + ") has 1 right child" );
+                    if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove - victim key (" + victim.key + ") has 1 right child" );
                     victim.parent.swap(victim, victim.right,"BST::remove(" + key + ")" );
                 }
                 else if(victim.right == null){
-                    if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove - victim  key (" + victim.key + ") has 1 left child" );
+                    if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove - victim  key (" + victim.key + ") has 1 left child" );
                     victim.parent.swap(victim, victim.left,"BST::remove(" + key + ")" );
                 }
                 else {
 
                     Node successor = victim.right.smallest();
-                    if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove - victim key (" + victim.key + ") has 2 children (" + victim.left.key + " , " + victim.right.key + "), succ=" + successor.key );
+                    if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove - victim key (" + victim.key + ") has 2 children (" + victim.left.key + " , " + victim.right.key + "), succ=" + successor.key );
                     assert successor.left == null;
                     successor.parent.swap(successor, successor.right, "BST::remove(" + key + ")" );
 
@@ -221,7 +221,7 @@ public class BST implements BSTInterface {
                     }
                 }
                 long res = this.size();
-                if(bst_dbg) System.out.println("thread " + Thread.currentThread() + " BST::remove() - size = " + res );
+                if(bst_dbg) System.out.println("thread " + Thread.currentThread().getId() + " BST::remove() - size = " + res );
                 assert ref;
                 assert res == setA.size();
                 return true;
